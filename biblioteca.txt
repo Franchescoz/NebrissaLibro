@@ -1,0 +1,20 @@
+Biblioteca Central;Calle Mayor 12, Sevilla;954123456
+Biblioteca Municipal;Avenida Andalucía 45, Cádiz;956987654
+Biblioteca Universitaria;Campus Norte, Granada;958456789
+
+Gabriel García Márquez;Autor de Cien años de soledad y otras obras del realismo mágico;1927-03-06
+Isabel Allende;Escritora chilena famosa por La casa de los espíritus;1942-08-02
+Miguel de Cervantes;Autor de Don Quijote de la Mancha;1547-09-29
+
+Cien años de soledad;Cuenta la historia de la familia Buendía a lo largo de generaciones;9780307474728;Novela;1967-05-30;Gabriel García Márquez
+La casa de los espíritus;Relata la vida de la familia Trueba en un contexto político y social;9788401352836;Novela;1982-01-01;Isabel Allende
+Don Quijote de la Mancha;Narra las aventuras de un hidalgo que pierde la cordura leyendo libros de caballería;9788491050291;Novela;1605-01-16;Miguel de Cervantes
+El amor en los tiempos del cólera;Historia de amor persistente entre Florentino Ariza y Fermina Daza a lo largo de los años;9780307389732;Novela;1985-01-01;Gabriel García Márquez
+Crónica de una muerte anunciada;Relato sobre un asesinato anunciado y la responsabilidad colectiva;9781400034719;Novela;1981-01-01;Gabriel García Márquez
+El otoño del patriarca;Retrato de un dictador latinoamericano y su soledad en el poder;9780307387943;Novela;1975-01-01;Gabriel García Márquez
+Eva Luna;Cuenta la vida de una joven narradora en un país latinoamericano ficticio;9788401340383;Novela;1987-01-01;Isabel Allende
+Paula;Memorias emotivas escritas para la hija enferma de la autora;9780061120091;Memorias;1994-01-01;Isabel Allende
+De amor y de sombra;Historia de amor en medio de la represión política;9788401340376;Novela;1984-01-01;Isabel Allende
+La Galatea;Novela pastoril que narra historias de amor entre pastores idealizados;9788491050284;Novela;1585-01-01;Miguel de Cervantes
+Los trabajos de Persiles y Sigismunda;Relato de aventuras y peregrinaciones de dos amantes;9788497402902;Novela;1617-01-01;Miguel de Cervantes
+Novelas ejemplares;Colección de relatos cortos con intención moral y didáctica;9788420412146;Cuentos;1613-01-01;Miguel de Cervantes
