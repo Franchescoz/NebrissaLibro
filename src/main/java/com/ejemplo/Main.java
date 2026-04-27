@@ -2,13 +2,14 @@ package com.ejemplo;
 
 import com.ejemplo.txt.ImportarTXT;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.time.LocalDate;
+import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
         String dbName = "NebrissaBiblioteca";
 
         try (Connection con = com.example.Pruebas.DBUtil.getConnection();
@@ -59,6 +60,78 @@ public class Main {
             System.out.println("Tabla Prestamo creada");
             ImportarTXT txt = new ImportarTXT();
             txt.importarTodo("biblioteca.txt");
+            int num = -1;
+            String nombreusuario="", email="", password="";
+            String nombrelibro="";
+            Boolean estado = true;
+
+
+            while(num!=0) {
+                System.out.println("Elige entre estas opciones\n1-insertar un usuario\n2-Hacer prestamo\n3-deshacer un prestamo\n4-Mostrar libros");
+                num=sc.nextInt();
+
+                switch(num) {
+                    case 1:
+                        System.out.println("Dame tu nombre de usuario");
+                        nombreusuario=sc.next();
+                        System.out.println("Dame tu email ");
+                        email=sc.next();
+                        System.out.println("Dame tu password");
+                        password=sc.next();
+                        PreparedStatement ps = con.prepareStatement("INSERT INTO Usuario (nombre, email, password) VALUES (?, ?, ?)");
+                        ps.setString(1, nombreusuario);
+                        ps.setString(2, email);
+                        ps.setString(3, password);
+
+                        ps.executeUpdate();
+                        break;
+                    case 2:
+                        System.out.println("Dame el nombre del libro que buscas");
+                        nombrelibro=sc.next();
+                        System.out.println("Dame tu nombre de usuario");
+                        nombreusuario=sc.next();
+                        PreparedStatement ps3 = con.prepareStatement("SELECT id_usuario FROM usuario WHERE nombre=? ");
+                        ps3.setString(1, nombreusuario);
+                        PreparedStatement pslibro = con.prepareStatement("SELECT id_libro FROM Libro WHERE nombre=? ");
+                        pslibro.setString(1, nombrelibro);
+                        ResultSet rslibro = pslibro.executeQuery();
+                        ResultSet rs2= ps3.executeQuery();
+                        PreparedStatement prestamo= con.prepareStatement("INSERT INTO Prestamo(id_usuario,id_libro,fecha_prestamo,estado,fecha_devolucion) VALUES (?,?,?,?,?)");
+                        prestamo.setInt(1,rs2.getInt("id_usuario"));
+                        prestamo.setInt(2,rslibro.getInt("id_libro"));
+                        prestamo.setDate(3, Date.valueOf(LocalDate.now()));
+                        prestamo.setBoolean(4,estado);
+                        prestamo.setDate(5,Date.valueOf(LocalDate.now().plusDays(30)));
+                        prestamo.executeUpdate();
+
+                    case 3:
+                        System.out.println("Dame el nombre del libro que buscas");
+                        nombrelibro=sc.next();
+                        System.out.println("Dame tu nombre de usuario");
+                        nombreusuario=sc.next();
+                        PreparedStatement psusuario3 = con.prepareStatement("SELECT id_usuario FROM usuario WHERE nombre=? ");
+                        psusuario3.setString(1, nombreusuario);
+                        PreparedStatement pslibro2 = con.prepareStatement("SELECT id_libro FROM Libro WHERE nombre=? ");
+                        pslibro2.setString(1, nombrelibro);
+                        ResultSet rslibro2 = pslibro2.executeQuery();
+                        ResultSet rsusuario2= psusuario3.executeQuery();
+                        PreparedStatement eliminarprestamo = con.prepareStatement("DELETE FROM Prestamo WHERE id_libro=? and id_usuario=?");
+                        eliminarprestamo.setInt(1, rslibro2.getInt("id_libro"));
+                        eliminarprestamo.setInt(2, rslibro2.getInt("id_usuario"));
+                        eliminarprestamo.executeUpdate();
+                    case 4:
+                        System.out.println("Estos son los libros");
+                        PreparedStatement libro = con.prepareStatement("SELECT * FROM libro ");
+
+                        ResultSet rs = libro.executeQuery();
+
+                        while  (rs.next()) {
+                            System.out.println(rs.getString("nombre")+"---");
+
+
+                        }
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
