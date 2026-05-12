@@ -1,4 +1,4 @@
-package com.example.Pruebas;
+package com.ejemplo;
 
 
 
