@@ -36,6 +36,14 @@ public class Club {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "libro_actual_id")
     private Libro libroActual;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "club_usuario",
+            joinColumns = @JoinColumn(name = "id_club"),
+            inverseJoinColumns = @JoinColumn(name = "id_usuario")
+    )
+    private java.util.List<Usuario> usuarios =
+            new java.util.ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -99,6 +107,15 @@ public class Club {
 
     public void setLibroActual(Libro libroActual) {
         this.libroActual = libroActual;
+    }
+    public java.util.List<Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(
+            java.util.List<Usuario> usuarios
+    ) {
+        this.usuarios = usuarios;
     }
 
 }
