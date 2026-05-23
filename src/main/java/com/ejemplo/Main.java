@@ -90,7 +90,40 @@ public class Main {
             int num =-1, menuJDBC=-1, menuHIBERNATE=-1;
             HibernateUtil.getSessionFactory();
             System.out.println("Hibernate conectado correctamente");
+            boolean adminLogueado = false;
+            boolean loginCorrecto = false;
 
+            while (!loginCorrecto) {
+
+                System.out.println("=== INICIO SESION ===");
+
+                System.out.println("Nombre usuario");
+                String usuarioLogin = sc.nextLine();
+
+                System.out.println("Password");
+                String passwordLogin = sc.nextLine();
+
+                if (usuarioDAO.existeUsuario(usuarioLogin, passwordLogin)) {
+
+                    adminLogueado =
+                            usuarioDAO.iniciarSesion(usuarioLogin, passwordLogin);
+
+                    loginCorrecto = true;
+
+                    if (adminLogueado) {
+
+                        System.out.println("Sesion iniciada como ADMIN");
+
+                    } else {
+
+                        System.out.println("Sesion iniciada como USUARIO");
+                    }
+
+                } else {
+
+                    System.out.println("Usuario o password incorrectos");
+                }
+            }
 
             while(num!=0){
                 System.out.println("""
@@ -108,13 +141,15 @@ public class Main {
                 switch (num){
 
                     case 1:
+                        menuJDBC = -1;
                         while (menuJDBC != 0) {
                             System.out.println("""
-                        
+                        Gestion de prestamos y Usuarios \n
                         1 - Insertar usuario
                         2 - Hacer préstamo
                         3 - Eliminar préstamo
                         4 - Mostrar libros
+                        5 - Mostrar usuarios
                         0 - Salir
                         
                         """);
@@ -124,6 +159,12 @@ public class Main {
 
                             switch (menuJDBC) {
                                 case 1:
+                                    if (!adminLogueado) {
+
+                                        System.out.println("No tienes permisos");
+
+                                        break;
+                                    }
 
                                     System.out.println("Nombre usuario");
                                     String nombreusuario = sc.nextLine();
@@ -143,7 +184,12 @@ public class Main {
 
                                     break;
                                 case 2:
+                                    if (!adminLogueado) {
 
+                                        System.out.println("No tienes permisos");
+
+                                        break;
+                                    }
                                     System.out.println("Nombre usuario");
                                     nombreusuario = sc.nextLine();
 
@@ -172,7 +218,12 @@ public class Main {
 
                                     break;
                                 case 3:
+                                    if (!adminLogueado) {
 
+                                        System.out.println("No tienes permisos");
+
+                                        break;
+                                    }
                                     System.out.println("Nombre usuario");
                                     nombreusuario = sc.nextLine();
 
@@ -213,7 +264,16 @@ public class Main {
                                     }
 
                                     break;
+                                case 5:
+                                    if (!adminLogueado) {
 
+                                        System.out.println("No tienes permisos");
+
+                                        break;
+                                    }
+                                    usuarioDAO.mostrarUsuarios();
+
+                                    break;
                                 case 0:
 
                                     System.out.println("Saliendo");
@@ -226,9 +286,19 @@ public class Main {
                         }
                         break;
                     case 2:
+                        if (!adminLogueado) {
+
+                            System.out.println(
+                                    "Solo los administradores pueden acceder a gestion de clubes"
+                            );
+
+                            break;
+                        }
+                        menuHIBERNATE= -1;
                         while (menuHIBERNATE != 0) {
 
                             System.out.println("""
+                                                Gestión de clubes\n
                                                 1 - Crear club
                                                 2 - Añadir libro a club
                                                 3 - Quitar libro de club
@@ -236,6 +306,7 @@ public class Main {
                                                 5 - Quitar admin de club
                                                 6 - Añadir integrantes
                                                 7 - Quitar integrantes
+                                                8 - Ver datos club
                                                 0 - Salir
                                                 
                                                 """);
@@ -250,51 +321,56 @@ public class Main {
                                     System.out.println("Nombre club");
                                     String nombreClub = sc.nextLine();
 
-                                    System.out.println("Numero integrantes");
-                                    int integrantes = sc.nextInt();
-                                    sc.nextLine();
-
                                     System.out.println("Descripcion");
                                     String descripcion = sc.nextLine();
 
                                     Biblioteca biblioteca = new Biblioteca();
-
                                     biblioteca.setNombre("Biblioteca principal");
 
-                                    clubDAO.crearClub(
-                                            nombreClub,
-                                            integrantes,
-                                            descripcion,
-                                            biblioteca
-                                    );
+                                    clubDAO.crearClub(nombreClub, descripcion, biblioteca);
 
                                     break;
-
                                 case 2:
 
-                                    System.out.println("ID club");
-                                    int idClubLibro = sc.nextInt();
-                                    sc.nextLine();
+                                    System.out.println("Nombre club");
+                                    String nombreClubLibro = sc.nextLine();
+
+                                    Integer idClubLibro = clubDAO.obtenerIdClubPorNombre(nombreClubLibro);
+
+                                    if (idClubLibro == null) {
+
+                                        System.out.println("Club no encontrado");
+                                        break;
+                                    }
 
                                     System.out.println("Nombre libro");
                                     String nombreLibro = sc.nextLine();
 
-                                    Libro libroHibernate = new Libro();
+                                    Libro libroHibernate = clubDAO.obtenerLibroPorNombre(nombreLibro);
 
-                                    libroHibernate.setNombre(nombreLibro);
+                                    if (libroHibernate != null) {
 
-                                    clubDAO.asignarLibro(
-                                            idClubLibro,
-                                            libroHibernate
-                                    );
+                                        clubDAO.asignarLibro(idClubLibro, libroHibernate);
+
+                                    } else {
+
+                                        System.out.println("Libro no encontrado");
+                                    }
 
                                     break;
 
                                 case 3:
 
-                                    System.out.println("ID club");
-                                    int idClubQuitarLibro = sc.nextInt();
-                                    sc.nextLine();
+                                    System.out.println("Nombre club");
+                                    String nombreClubQuitarLibro = sc.nextLine();
+
+                                    Integer idClubQuitarLibro = clubDAO.obtenerIdClubPorNombre(nombreClubQuitarLibro);
+
+                                    if (idClubQuitarLibro == null) {
+
+                                        System.out.println("Club no encontrado");
+                                        break;
+                                    }
 
                                     clubDAO.quitarLibro(idClubQuitarLibro);
 
@@ -302,35 +378,62 @@ public class Main {
 
                                 case 4:
 
-                                    System.out.println("ID club");
-                                    int idClubAdmin = sc.nextInt();
-                                    sc.nextLine();
+                                    System.out.println("Nombre club");
+                                    String nombreClubAdmin = sc.nextLine();
+
+                                    Integer idClubAdmin = clubDAO.obtenerIdClubPorNombre(nombreClubAdmin);
+                                    if (idClubAdmin == null) {
+
+                                        System.out.println("Club no encontrado");
+                                        break;
+                                    }
 
                                     System.out.println("Nombre admin");
                                     String nombreAdmin = sc.nextLine();
 
-                                    Usuario usuario = new Usuario();
+                                    Usuario usuario = clubDAO.obtenerUsuarioPorNombre(nombreAdmin);
 
-                                    usuario.setNombre(nombreAdmin);
+                                    if (usuario != null) {
 
-                                    clubDAO.asignarAdmin(idClubAdmin, usuario);
+                                        clubDAO.asignarAdmin(
+                                                idClubAdmin, usuario);
+                                    } else {
+
+                                        System.out.println("Usuario no encontrado");
+                                    }
 
                                     break;
 
                                 case 5:
 
-                                    System.out.println("ID club");
-                                    int idClubQuitarAdmin = sc.nextInt();
-                                    sc.nextLine();
+                                    System.out.println("Nombre club");
+                                    String nombreClubQuitarAdmin = sc.nextLine();
+
+                                    Integer idClubQuitarAdmin =
+                                            clubDAO.obtenerIdClubPorNombre(nombreClubQuitarAdmin);
+
+                                    if (idClubQuitarAdmin == null) {
+
+                                        System.out.println("Club no encontrado");
+                                        break;
+                                    }
 
                                     clubDAO.quitarAdmin(idClubQuitarAdmin);
 
                                     break;
+
                                 case 6:
 
-                                    System.out.println("ID club");
-                                    int idClubUsuario = sc.nextInt();
-                                    sc.nextLine();
+                                    System.out.println("Nombre club");
+                                    String nombreClubUsuario = sc.nextLine();
+
+                                    Integer idClubUsuario = clubDAO.obtenerIdClubPorNombre(nombreClubUsuario);
+
+                                    if (idClubUsuario == null) {
+
+                                        System.out.println("Club no encontrado");
+                                        break;
+                                    }
 
                                     System.out.println("Nombre usuario");
                                     String nombreUsuarioAdd = sc.nextLine();
@@ -339,23 +442,27 @@ public class Main {
 
                                     if (usuarioAdd != null) {
 
-                                        clubDAO.añadirUsuario(
-                                                idClubUsuario,
-                                                usuarioAdd
-                                        );
+                                        clubDAO.añadirUsuario(idClubUsuario, usuarioAdd);
 
                                     } else {
+
                                         System.out.println("Usuario no encontrado");
                                     }
 
                                     break;
 
-
                                 case 7:
 
-                                    System.out.println("ID club");
-                                    int idClubQuitarUsuarior = sc.nextInt();
-                                    sc.nextLine();
+                                    System.out.println("Nombre club");
+                                    String nombreClubRemove = sc.nextLine();
+
+                                    Integer idClubQuitarUsuario = clubDAO.obtenerIdClubPorNombre(nombreClubRemove);
+
+                                    if (idClubQuitarUsuario == null) {
+
+                                        System.out.println("Club no encontrado");
+                                        break;
+                                    }
 
                                     System.out.println("Nombre usuario");
                                     String nombreUsuarioRemove = sc.nextLine();
@@ -364,21 +471,31 @@ public class Main {
 
                                     if (usuarioRemove != null) {
 
-                                        clubDAO.quitarUsuario(
-                                                idClubQuitarUsuarior,
-                                                usuarioRemove
-                                        );
+                                        clubDAO.quitarUsuario(idClubQuitarUsuario, usuarioRemove);
 
                                     } else {
+
                                         System.out.println("Usuario no encontrado");
                                     }
 
                                     break;
+                                case 8:
 
+                                    System.out.println("Nombre club");
+                                    String nombreClubDatos = sc.nextLine();
+
+                                    clubDAO.mostrarDatosClub(nombreClubDatos);
+
+                                    break;
                                 case 0:
 
                                     System.out.println("Saliendo");
                                     break;
+
+                                default:
+
+                                    System.out.println("Opcion incorrecta");
+
 
 
                             }

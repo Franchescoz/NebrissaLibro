@@ -22,9 +22,7 @@ public class ImportarTXT {
     private List<biblioteca> bibliotecas = new ArrayList<>();
     private List<autor> autores = new ArrayList<>();
     private List<libro> libros = new ArrayList<>();
-
     public void importarTodo(String rutaArchivo) {
-
         try (Connection con = com.ejemplo.DBUtil.getConnection()) {
 
             try (
@@ -49,26 +47,16 @@ public class ImportarTXT {
 
                     PreparedStatement psExisteLibro = con.prepareStatement(
                             "SELECT id_libro FROM Libro WHERE ISBN = ?")
-
             ) {
 
                 String linea;
-
                 while ((linea = br.readLine()) != null) {
-
                     if (linea.trim().isEmpty()) {
                         continue;
                     }
-
                     String[] datos = linea.split(";");
-
-
                     if (datos.length == 3) {
-
-
                         if (datos[0].startsWith("B")) {
-
-
                             psExisteBiblio.setString(1, datos[0]);
                             ResultSet rsBiblio = psExisteBiblio.executeQuery();
 
@@ -80,23 +68,17 @@ public class ImportarTXT {
 
                                 psBiblio.executeUpdate();
 
-                                biblioteca b = new biblioteca(
-                                        datos[0],
-                                        datos[1],
-                                        datos[2]
+                                biblioteca b = new biblioteca(datos[0], datos[1], datos[2]
                                 );
 
                                 bibliotecas.add(b);
 
-                                System.out.println("Biblioteca insertada: " + datos[0]);
+
 
                             } else {
-                                System.out.println("Biblioteca repetida: " + datos[0]);
+
                             }
-
                         }
-
-
                         else {
 
                             psExisteAutor.setString(1, datos[0]);
@@ -120,10 +102,8 @@ public class ImportarTXT {
 
                                 autores.add(a);
 
-                                System.out.println("Autor insertado: " + datos[0]);
-
                             } else {
-                                System.out.println("Autor repetido: " + datos[0]);
+
                             }
                         }
 
@@ -168,11 +148,11 @@ public class ImportarTXT {
 
                                 libros.add(l);
 
-                                System.out.println("Libro insertado: " + datos[0]);
+
                             }
 
                         } else {
-                            System.out.println("Libro repetido ISBN: " + datos[2]);
+
                         }
                     }
                 }

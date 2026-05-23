@@ -80,5 +80,82 @@ public class usuarioDAO {
             e.printStackTrace();
         }
     }
+    public void mostrarUsuarios() {
+
+        String sql = "SELECT id_usuario, nombre, email, admin FROM Usuario";
+
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            System.out.println("=== LISTA DE USUARIOS ===");
+
+            while (rs.next()) {
+
+                System.out.println(
+                        "ID: " + rs.getInt("id_usuario") +
+                                " | Nombre: " + rs.getString("nombre") +
+                                " | Email: " + rs.getString("email") +
+                                " | Admin: " + rs.getBoolean("admin")
+                );
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public boolean iniciarSesion(String nombre, String password) {
+
+        String sql = """
+            SELECT admin
+            FROM Usuario
+            WHERE nombre = ? AND password = ?
+            """;
+
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, nombre);
+            ps.setString(2, password);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+
+                return rs.getBoolean("admin");
+            }
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+    public boolean existeUsuario(String nombre, String password) {
+
+        String sql = """
+            SELECT *
+            FROM Usuario
+            WHERE nombre = ? AND password = ?
+            """;
+
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, nombre);
+            ps.setString(2, password);
+
+            ResultSet rs = ps.executeQuery();
+
+            return rs.next();
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 
 }
