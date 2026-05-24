@@ -165,12 +165,20 @@ public class Main {
                                     }
                                     System.out.println("Nombre usuario");
                                     String nombreusuario = sc.nextLine();
+                                    while (usuarioDAO.obtenerIdUsuario(nombreusuario) != -1 || nombreusuario.equals("")) {
+                                        System.out.println("No puedes dejar el nombre de usuario vacio o ese nombre ya existe" );
+                                        nombreusuario = sc.nextLine();
 
+                                    }
                                     System.out.println("Email");
                                     String email = sc.nextLine();
-
+                                    while(email.equals("")) {
+                                        System.out.println("No puedes dejar el correo  vacio" );
+                                        email = sc.nextLine();
+                                    }
                                     System.out.println("Password");
                                     String password = sc.nextLine();
+
 
                                     usuarioDAO.insertarUsuario(nombreusuario, email, password, false);
                                     historialDAO.guardarAccion(nombreusuario, "crear_usuario", "Se creó un usuario",
@@ -585,13 +593,28 @@ public class Main {
                                         System.out.println("Usuario o libro no encontrado");
                                         break;
                                     }
-                                    System.out.println("Puntuacion");
-                                    int puntuacion = sc.nextInt();
-                                    sc.nextLine();
+                                    int puntuacion = 0;
 
+                                    while (true) {
+                                        System.out.println("Puntuacion");
+                                        String entrada = sc.nextLine(); //
+                                        if (entrada.equals("")) {
+                                            System.out.println("La puntuación no puede estar vacía. Inténtalo de nuevo.");
+                                            continue;
+                                        }
+                                        try {
+                                            puntuacion = Integer.parseInt(entrada);
+                                            break;
+                                        } catch (NumberFormatException e) {
+                                            System.out.println("Debes introducir un número, no letras. Inténtalo de nuevo.");
+                                        }
+                                    }
                                     System.out.println("Comentario");
                                     String comentario = sc.nextLine();
-
+                                    while (comentario.equals("")) {
+                                        System.out.println("No puedes dejar el comentario vacio, escribelo");
+                                        comentario = sc.nextLine();
+                                    }
                                     reseñaDAO.crearReseña(nombreUsuarioReseña, nombreLibroReseña, puntuacion, comentario);
                                     historialDAO.guardarAccion(nombreUsuarioReseña, "crear_reseña", "Usuario añadió una reseña",
                                             new Document(
@@ -626,6 +649,10 @@ public class Main {
 
                                     System.out.println("Comentario");
                                     String comentarioRespuesta = sc.nextLine();
+                                    while (!comentarioRespuesta.equals("")) {
+                                        System.out.println("No puedes dejar el comentario vacio");
+                                        comentarioRespuesta = sc.nextLine();
+                                    }
 
                                     reseñaDAO.añadirComentario(usuarioReseña, libroReseña, nombreUsuarioComentario, comentarioRespuesta);
 
