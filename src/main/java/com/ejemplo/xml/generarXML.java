@@ -25,25 +25,30 @@ public class generarXML {
             doc.appendChild(root);
 
             String sql = """
-                SELECT 
-                    l.id_libro,
-                    l.nombre AS libro_nombre,
-                    l.sinopsis,
-                    l.ISBN,
-                    a.nombre AS autor_nombre,
-                    a.bibliografía,
-                    a.fecha_nacimiento
-                FROM Libro l
-                JOIN Autor a ON l.id_autor = a.id_autor
-                WHERE l.nombre = ?
-            """;
+            SELECT 
+                l.id_libro,
+                l.nombre AS libro_nombre,
+                l.sinopsis,
+                l.ISBN,
+                a.nombre AS autor_nombre,
+                a.bibliografía,
+                a.fecha_nacimiento
+            FROM Libro l
+            JOIN Autor a ON l.id_autor = a.id_autor
+            WHERE l.nombre = ?
+        """;
 
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, nombreLibroFiltro);
 
             ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
+            if (!rs.next()) {
+                System.out.println("El libro no existe");
+                return;
+            }
+
+            do {
 
                 int idLibro = rs.getInt("id_libro");
                 int prestamos = contarPrestamos(con, idLibro);
@@ -63,17 +68,20 @@ public class generarXML {
 
                 libro.appendChild(autor);
                 root.appendChild(libro);
-            }
 
+            } while (rs.next());
 
             String fileName = "INFOR - " + nombreLibroFiltro + ".xml";
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
             DOMSource source = new DOMSource(doc);
             StreamResult result = new StreamResult(new File(fileName));
+
             transformer.transform(source, result);
+
             System.out.println("XML generado correctamente: " + fileName);
 
         } catch (Exception e) {

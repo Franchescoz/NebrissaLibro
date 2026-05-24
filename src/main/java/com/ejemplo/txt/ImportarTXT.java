@@ -72,11 +72,7 @@ public class ImportarTXT {
                                 psAutor.setDate(3, fecha);
                                 psAutor.executeUpdate();
 
-                                autor a = new autor(
-                                        datos[0],
-                                        datos[1],
-                                        fecha
-                                );
+                                autor a = new autor(datos[0], datos[1], fecha);
 
                                 autores.add(a);
 

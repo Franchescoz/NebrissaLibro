@@ -24,6 +24,7 @@ public class historialDAO {
         historial.append("descripcion", descripcion);
         historial.append("fecha", LocalDate.now().toString());
         historial.append("detalles", detalles);
+
         collection.insertOne(historial);
     }
 
@@ -42,12 +43,16 @@ public class historialDAO {
             System.out.println("Fecha: " + doc.getString("fecha"));
 
             Document detalles = (Document) doc.get("detalles");
-
+            System.out.println("DetalleS: ");
             if (detalles != null) {
-                System.out.println("Detalles: " + detalles.getString("detalle"));
+                System.out.println("Detalle: " + detalles.getString("detalle"));
+            if (detalles.getString("Estado")!=null){
+                    System.out.println("Estado: " + detalles.getString("Estado"));
+                }
             } else {
                 System.out.println("Detalles: null");
             }
         }
+        System.out.println("---------------\n");
     }
 }

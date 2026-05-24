@@ -200,9 +200,8 @@ public class Main {
                                         historialDAO.guardarAccion(nombreusuario, "hacer_prestamo", "Usuario realizó un préstamo",
                                                 new Document(
                                                         "detalle",
-                                                        "El usuario " + nombreusuario +
-                                                                " ha pedido prestado el libro " + nombrelibro
-                                                )
+                                                        "El usuario " + nombreusuario + " ha pedido prestado el libro " + nombrelibro
+                                                ).append("Estado","Prestado")
                                         );
                                     } else {
                                         System.out.println("Usuario o libro no encontrado");
@@ -231,9 +230,8 @@ public class Main {
                                         historialDAO.guardarAccion(nombreusuario, "devolver_prestamo", "Usuario devolvió un préstamo",
                                                 new Document(
                                                         "detalle",
-                                                        "El usuario " + nombreusuario +
-                                                                " ha devuelto el libro " + nombrelibro
-                                                )
+                                                        "El usuario " + nombreusuario + " ha devuelto el libro " + nombrelibro
+                                                ).append("Estado","Devuelto")
                                         );
                                     } else {
                                         System.out.println("Usuario o libro no encontrado");
@@ -276,13 +274,13 @@ public class Main {
 
                                     while (opcionEditar != 0) {
                                         System.out.println("""
-                ¿Qué quieres modificar?
-                1 - Nombre
-                2 - Email
-                3 - Password
-                4 - Guardar cambios
-                0 - Cancelar
-                """);
+                                                ¿Qué quieres modificar?
+                                                1 - Nombre
+                                                2 - Email
+                                                3 - Password
+                                                4 - Guardar cambios
+                                                0 - Cancelar
+                                                """);
 
                                         opcionEditar = sc.nextInt();
                                         sc.nextLine();
@@ -301,7 +299,7 @@ public class Main {
                                                 nuevaPassword = sc.nextLine();
                                                 break;
                                             case 4:
-                                                usuarioDAO.editarUsuario(idUsuarioEditar, nuevoNombre != null ? nuevoNombre : nombreBuscar, nuevoEmail, nuevaPassword);
+                                                usuarioDAO.editarUsuario(idUsuarioEditar, nuevoNombre != null  ? nuevoNombre : nombreBuscar, nuevoEmail, nuevaPassword);
                                                 historialDAO.guardarAccion("ADMIN", "editar_usuario", "Admin editó un usuario",
                                                         new Document(
                                                                 "detalle",

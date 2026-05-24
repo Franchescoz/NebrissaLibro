@@ -4,8 +4,6 @@ import com.ejemplo.mongodb.MongoDBUtil;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
-import org.bson.types.ObjectId;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +28,7 @@ public class reseñaDAO {
         reseña.append("respuestas", new ArrayList<>());
         collection.insertOne(reseña);
 
-        System.out.println("Reseña creada");
+        System.out.println("Reseña creada\n");
     }
 
 
@@ -41,7 +39,7 @@ public class reseñaDAO {
 
         if (reseñas.isEmpty()) {
 
-            System.out.println("No hay resultados o has escrito mal el nombre");
+            System.out.println("No hay resultados o has escrito mal el nombre\n");
 
             return;
         }
@@ -79,9 +77,10 @@ public class reseñaDAO {
 
             } else {
 
-                System.out.println("No hay respuestas");
+                System.out.println("No hay respuestas\n");
             }
         }
+        System.out.println("-----------------\n");
     }
 
     public void añadirComentario(String usuarioReseña, String libro, String usuario, String comentario) {
@@ -94,13 +93,9 @@ public class reseñaDAO {
 
         respuesta.append("fecha", LocalDate.now().toString());
 
-        Document reseña = collection.find(
-                new Document("usuario", usuarioReseña)
-                        .append("libro", libro)
-        ).first();
-
+        Document reseña = collection.find(new Document("usuario", usuarioReseña).append("libro", libro)).first();
         if (reseña == null) {
-            System.out.println("Reseña no encontrada");
+            System.out.println("Reseña no encontrada\n");
             return;
         }
 
@@ -111,7 +106,7 @@ public class reseñaDAO {
                 )
         );
 
-        System.out.println("Comentario añadido");
+        System.out.println("Comentario añadido\n");
     }
 
 }
