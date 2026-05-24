@@ -15,12 +15,8 @@ public class reseñaDAO {
     private final MongoCollection<Document> collection;
 
     public reseñaDAO() {
-
-        MongoDatabase db =
-                MongoDBUtil.getDatabase();
-
-        collection =
-                db.getCollection("reseñas");
+        MongoDatabase db = MongoDBUtil.getDatabase();
+        collection = db.getCollection("reseñas");
     }
 
     public void crearReseña(String usuario, String libro, int puntuacion, String comentario) {

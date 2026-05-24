@@ -7,10 +7,7 @@ import java.sql.*;
 public class usuarioDAO {
 
 
-    public void insertarUsuario(String nombre,
-                                String email,
-                                String password,
-                                boolean admin) {
+    public void insertarUsuario(String nombre, String email, String password, boolean admin) {
 
         String sql = """
                 INSERT INTO Usuario

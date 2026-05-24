@@ -16,10 +16,7 @@ public class ClubDAO {
 
             Transaction tx = session.beginTransaction();
 
-            Long existe = session.createQuery(
-                    "SELECT COUNT(c) FROM Club c WHERE c.nombre = :nombre",
-                    Long.class
-            ).setParameter("nombre", nombre).uniqueResult();
+            Long existe = session.createQuery("SELECT COUNT(c) FROM Club c WHERE c.nombre = :nombre", Long.class).setParameter("nombre", nombre).uniqueResult();
 
             if (existe != null && existe > 0) {
 

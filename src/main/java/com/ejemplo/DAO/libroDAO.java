@@ -9,35 +9,6 @@ import java.util.List;
 
 public class libroDAO {
 
-
-    public void insertarLibro(libro l) {
-
-        String sql = """
-                INSERT INTO Libro
-                (nombre, sinopsis, ISBN, tipo_libro, fecha_publicacion, id_autor)
-                VALUES (?, ?, ?, ?, ?, ?)
-                """;
-
-        try (Connection con = DBUtil.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setString(1, l.getNombre());
-            ps.setString(2, l.getSinopsis());
-            ps.setString(3, l.getISBN());
-            ps.setString(4, l.getTipo_libro());
-            ps.setDate(5, l.getFecha_publicacion());
-            ps.setInt(6, l.getId_autor());
-
-            ps.executeUpdate();
-
-            System.out.println("Libro insertado correctamente");
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     public int obtenerIdLibro(String nombre) {
 
         String sql = "SELECT id_libro FROM Libro WHERE nombre=?";
@@ -95,21 +66,5 @@ public class libroDAO {
     }
 
 
-    public void eliminarLibro(int idLibro) {
 
-        String sql = "DELETE FROM Libro WHERE id_libro=?";
-
-        try (Connection con = DBUtil.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setInt(1, idLibro);
-
-            ps.executeUpdate();
-
-            System.out.println("Libro eliminado");
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 }
