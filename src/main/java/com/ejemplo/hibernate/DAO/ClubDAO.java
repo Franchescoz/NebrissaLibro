@@ -10,7 +10,7 @@ import org.hibernate.Transaction;
 
 public class ClubDAO {
 
-    public void crearClub(String nombre,String descripcion,Biblioteca biblioteca) {
+    public void crearClub(String nombre, String descripcion, String nombreBiblioteca) {
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 
@@ -19,32 +19,37 @@ public class ClubDAO {
             Long existe = session.createQuery(
                     "SELECT COUNT(c) FROM Club c WHERE c.nombre = :nombre",
                     Long.class
-            ).setParameter("nombre",nombre).uniqueResult();
+            ).setParameter("nombre", nombre).uniqueResult();
 
             if (existe != null && existe > 0) {
 
                 System.out.println("Ya existe un club con ese nombre");
-
                 tx.commit();
-
                 return;
             }
 
-            Biblioteca bibliotecaPersistida = session.merge(biblioteca);
+            Biblioteca biblioteca = session.createQuery("FROM Biblioteca WHERE nombre = :nombre", Biblioteca.class).setParameter("nombre", nombreBiblioteca).uniqueResult();
+
+            if (biblioteca == null) {
+
+                System.out.println("Biblioteca no encontrada");
+                tx.rollback();
+                return;
+            }
 
             Club club = new Club();
 
             club.setNombre(nombre);
             club.setDescripcion(descripcion);
             club.setFechaFundacion(java.time.LocalDate.now());
-            club.setIdbiblioteca(bibliotecaPersistida);
+            club.setIdbiblioteca(biblioteca);
             club.setNumIntegrantes(0);
 
             session.persist(club);
 
             tx.commit();
 
-            System.out.println("Club creado");
+            System.out.println("Club creado correctamente");
 
         } catch (Exception e) {
 

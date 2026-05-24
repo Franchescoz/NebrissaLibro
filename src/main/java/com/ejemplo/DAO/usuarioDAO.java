@@ -35,7 +35,34 @@ public class usuarioDAO {
         }
     }
 
+    public void editarUsuario(int idUsuario, String nuevoNombre, String nuevoEmail, String nuevaPassword) {
 
+        String sql = """
+        UPDATE Usuario
+        SET nombre = ?, email = ?, password = ?
+        WHERE id_usuario = ?
+    """;
+
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, nuevoNombre);
+            ps.setString(2, nuevoEmail);
+            ps.setString(3, nuevaPassword);
+            ps.setInt(4, idUsuario);
+
+            int filas = ps.executeUpdate();
+
+            if (filas > 0) {
+                System.out.println("Usuario actualizado correctamente");
+            } else {
+                System.out.println("No se pudo actualizar el usuario");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     public int obtenerIdUsuario(String nombre) {
 
         String sql = "SELECT id_usuario FROM Usuario WHERE nombre=?";

@@ -27,28 +27,13 @@ public class ImportarTXT {
 
             try (
                     BufferedReader br = new BufferedReader(new FileReader(rutaArchivo));
-
-
-                    PreparedStatement psBiblio = con.prepareStatement(
-                            "INSERT INTO Biblioteca (nombre, dirección, telefono_contacto) VALUES (?, ?, ?)");
-
-                    PreparedStatement psAutor = con.prepareStatement(
-                            "INSERT INTO Autor (nombre, bibliografía, fecha_nacimiento) VALUES (?, ?, ?)");
-
-                    PreparedStatement psLibro = con.prepareStatement(
-                            "INSERT INTO Libro (nombre, sinopsis, ISBN, tipo_libro, fecha_publicacion, id_autor) VALUES (?, ?, ?, ?, ?, ?)");
-
-
-                    PreparedStatement psExisteBiblio = con.prepareStatement(
-                            "SELECT id_biblioteca FROM Biblioteca WHERE nombre = ?");
-
-                    PreparedStatement psExisteAutor = con.prepareStatement(
-                            "SELECT id_autor FROM Autor WHERE nombre = ?");
-
-                    PreparedStatement psExisteLibro = con.prepareStatement(
-                            "SELECT id_libro FROM Libro WHERE ISBN = ?")
+                    PreparedStatement psBiblio = con.prepareStatement("INSERT INTO Biblioteca (nombre, dirección, telefono_contacto) VALUES (?, ?, ?)");
+                    PreparedStatement psAutor = con.prepareStatement("INSERT INTO Autor (nombre, bibliografía, fecha_nacimiento) VALUES (?, ?, ?)");
+                    PreparedStatement psLibro = con.prepareStatement("INSERT INTO Libro (nombre, sinopsis, ISBN, tipo_libro, fecha_publicacion, id_autor) VALUES (?, ?, ?, ?, ?, ?)");
+                    PreparedStatement psExisteBiblio = con.prepareStatement("SELECT id_biblioteca FROM Biblioteca WHERE nombre = ?");
+                    PreparedStatement psExisteAutor = con.prepareStatement("SELECT id_autor FROM Autor WHERE nombre = ?");
+                    PreparedStatement psExisteLibro = con.prepareStatement("SELECT id_libro FROM Libro WHERE ISBN = ?")
             ) {
-
                 String linea;
                 while ((linea = br.readLine()) != null) {
                     if (linea.trim().isEmpty()) {
@@ -65,7 +50,6 @@ public class ImportarTXT {
                                 psBiblio.setString(1, datos[0]);
                                 psBiblio.setString(2, datos[1]);
                                 psBiblio.setString(3, datos[2]);
-
                                 psBiblio.executeUpdate();
 
                                 biblioteca b = new biblioteca(datos[0], datos[1], datos[2]
@@ -73,14 +57,9 @@ public class ImportarTXT {
 
                                 bibliotecas.add(b);
 
-
-
-                            } else {
-
                             }
                         }
                         else {
-
                             psExisteAutor.setString(1, datos[0]);
                             ResultSet rsAutor = psExisteAutor.executeQuery();
 
@@ -91,7 +70,6 @@ public class ImportarTXT {
                                 psAutor.setString(1, datos[0]);
                                 psAutor.setString(2, datos[1]);
                                 psAutor.setDate(3, fecha);
-
                                 psAutor.executeUpdate();
 
                                 autor a = new autor(
@@ -102,26 +80,16 @@ public class ImportarTXT {
 
                                 autores.add(a);
 
-                            } else {
-
                             }
                         }
 
                     }
-
-
                     else if (datos.length == 6) {
-
-
                         psExisteLibro.setString(1, datos[2]);
-
                         ResultSet rsLibro = psExisteLibro.executeQuery();
-
                         if (!rsLibro.next()) {
 
-
                             psExisteAutor.setString(1, datos[5]);
-
                             ResultSet rsAutor = psExisteAutor.executeQuery();
 
                             if (rsAutor.next()) {
@@ -137,32 +105,16 @@ public class ImportarTXT {
 
                                 psLibro.executeUpdate();
 
-                                libro l = new libro(
-                                        datos[0],
-                                        datos[1],
-                                        datos[2],
-                                        datos[3],
-                                        Date.valueOf(datos[4]),
-                                        idAutor
-                                );
-
+                                libro l = new libro(datos[0], datos[1], datos[2], datos[3], Date.valueOf(datos[4]), idAutor);
                                 libros.add(l);
-
-
                             }
-
-                        } else {
-
                         }
                     }
                 }
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             System.out.println("Proceso de importación finalizado.");
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
