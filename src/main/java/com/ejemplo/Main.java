@@ -102,7 +102,7 @@ public class Main {
 
             while (!loginCorrecto) {
 
-                System.out.println("=== INICIO SESION ===");
+                System.out.println("=== INICIO SESIÓN ===");
 
                 System.out.println("Nombre usuario");
                 String usuarioLogin = sc.nextLine();
